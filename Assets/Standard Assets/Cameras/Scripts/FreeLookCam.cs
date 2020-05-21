@@ -15,6 +15,7 @@ namespace UnityStandardAssets.Cameras
 
         [SerializeField] private float m_MoveSpeed = 1f;                      // How fast the rig will move to keep up with the target's position.
         [Range(0f, 10f)] [SerializeField] private float m_TurnSpeed = 1.5f;   // How fast the rig will rotate from user input.
+        [Range(0f, 50f)] [SerializeField] private float c_TurnSpeed = 3.0f;   // Same as m_TurnSpeed except for controller input
         [SerializeField] private float m_TurnSmoothing = 0.0f;                // How much smoothing to apply to the turn input, to reduce mouse-turn jerkiness
         [SerializeField] private float m_TiltMax = 75f;                       // The maximum value of the x axis rotation of the pivot.
         [SerializeField] private float m_TiltMin = 45f;                       // The minimum value of the x axis rotation of the pivot.
@@ -77,12 +78,22 @@ namespace UnityStandardAssets.Cameras
             var y = CrossPlatformInputManager.GetAxis("Mouse Y");
             var cx = CrossPlatformInputManager.GetAxis("Controller X");
             var cy = CrossPlatformInputManager.GetAxis("Controller Y");
-
             var xcx = x + cx;
             var ycy = y + cy;
 
             // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
-            m_LookAngle += xcx*m_TurnSpeed;
+            if (x > 0 || x < 0)
+            {
+                m_LookAngle += x * m_TurnSpeed;
+            }
+            else if(cx > 0 || cx < 0)
+            {
+                m_LookAngle += cx * c_TurnSpeed;
+            }
+            else if (x > 0 || x < 0 && cx > 0 || cx < 0)
+            {
+                m_LookAngle = xcx * m_TurnSpeed;
+            }
 
             // Rotate the rig (the root object) around Y axis only:
             m_TransformTargetRot = Quaternion.Euler(0f, m_LookAngle, 0f);
@@ -96,8 +107,20 @@ namespace UnityStandardAssets.Cameras
             }
             else
             {
-                // on platforms with a mouse, we adjust the current angle based on Y mouse input and turn speed
-                m_TiltAngle -= ycy*m_TurnSpeed;
+                // on platforms with a mouse or controller, we adjust the current angle based on Y mouse input and turn speed
+                if (y > 0 || y < 0)
+                {
+                    m_TiltAngle -= y * m_TurnSpeed;
+                }
+                else if (cy > 0 || cy < 0)
+                {
+                    m_TiltAngle -= cy * c_TurnSpeed;
+                }
+                else if (y > 0 || y < 0 && cy > 0 || cy < 0)
+                {
+                    m_TiltAngle -= ycy * m_TurnSpeed;
+                }
+
                 // and make sure the new value is within the tilt range
                 m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
             }
