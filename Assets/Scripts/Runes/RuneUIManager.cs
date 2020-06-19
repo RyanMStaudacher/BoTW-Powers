@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
+using System.Linq;
+using UnityEngine.Assertions.Must;
 
 public class RuneUIManager : MonoBehaviour
 {
@@ -13,56 +16,36 @@ public class RuneUIManager : MonoBehaviour
     public int startButton = 1;
     public float snapSpeed = 10f;
 
-    private float[] distance;
-    private bool dragging = false;
+    private IRune[] runes;
+    private GameObject player;
     private int bttnDistance;
     private int minButtonNum;
     private int buttonIndex = 0;
-    private bool targetNearestButton = true;
     private bool shouldTimeStop = false;
     private bool runeUIActive = false;
     private bool hasLerped = false;
 
     private void Start()
     {
-        int bttnLength = bttn.Length;
-        distance = new float[bttnLength];
-
         bttnDistance = (int)Mathf.Abs(bttn[1].GetComponent<RectTransform>().anchoredPosition.x - bttn[0].GetComponent<RectTransform>().anchoredPosition.x);
 
         scrollPanel.anchoredPosition = new Vector2((startButton - 1) * -125, 0f);
+
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        var c = player.GetComponents<MonoBehaviour>();
+        runes = (from a in c where a.GetType().GetInterfaces().Any(k => k == typeof(IRune)) select (IRune)a).ToArray();
     }
 
     private void Update()
     {
         SetUIActiveInactive();
         GoToButton();
-
-        for (int i = 0; i < bttn.Length; i++)
-        {
-            distance[i] = Mathf.Abs(center.transform.position.x - bttn[i].transform.position.x);
-        }
-
-        if (targetNearestButton)
-        {
-            float minDistance = Mathf.Min(distance);
-
-            for (int a = 0; a < bttn.Length; a++)
-            {
-                if (minDistance == distance[a])
-                {
-                    minButtonNum = a;
-                }
-            }
-        }
-
-        if (!dragging)
-        {
-            LerpToBttn(minButtonNum * -bttnDistance);
-        }
+        LerpToBttn(minButtonNum * -bttnDistance);
     }
 
-    void LerpToBttn(int position)
+    // Lerps the scroll panel to the appropriate position.
+    private void LerpToBttn(int position)
     {
         float newX = Mathf.Lerp(scrollPanel.anchoredPosition.x, position, Time.unscaledDeltaTime * snapSpeed);
         Vector2 newPosition = new Vector2(newX, scrollPanel.anchoredPosition.y);
@@ -70,22 +53,9 @@ public class RuneUIManager : MonoBehaviour
         scrollPanel.anchoredPosition = newPosition;
     }
 
-    public void StartDrag()
+    // Detects user input to determine which position to lerp to.
+    private void GoToButton()
     {
-        dragging = true;
-
-        targetNearestButton = true;
-    }
-
-    public void EndDrag()
-    {
-        dragging = false;
-    }
-
-    public void GoToButton()
-    {
-        targetNearestButton = false;
-
         if (runeUIActive)
         {
             if (CrossPlatformInputManager.GetAxis("Controller X") > 0 && !hasLerped || CrossPlatformInputManager.GetAxis("Mouse ScrollWheel") > 0 && !hasLerped)
@@ -94,6 +64,7 @@ public class RuneUIManager : MonoBehaviour
                 {
                     buttonIndex = buttonIndex - 1;
                     minButtonNum = buttonIndex;
+                    ActivateScript();
                     hasLerped = true;
                 }
             }
@@ -103,6 +74,7 @@ public class RuneUIManager : MonoBehaviour
                 {
                     buttonIndex = buttonIndex + 1;
                     minButtonNum = buttonIndex;
+                    ActivateScript();
                     hasLerped = true;
                 }
             }
@@ -113,6 +85,7 @@ public class RuneUIManager : MonoBehaviour
         }
     }
 
+    // As the name suggests, sets the Rune UI active or inactive depending on whether or not the Rune UI button is pressed. Also sets the time scale to 0 when the Rune UI is active and 1 when the Rune UI is inactive.
     private void SetUIActiveInactive()
     {
         if (CrossPlatformInputManager.GetButton("Rune UI") || CrossPlatformInputManager.GetAxis("Controller Rune UI") > 0)
@@ -135,6 +108,23 @@ public class RuneUIManager : MonoBehaviour
         else if(shouldTimeStop)
         {
             Time.timeScale = 0;
+        }
+    }
+
+    // Sets the correct Rune script active and deactivates the rest. As of right now it just looks for the script with the same name as the button. 
+    // This system is terrible and I am aware of the crappy jankiness of it. However, I am leaving it as is because...it works.
+    private void ActivateScript()
+    {
+        foreach (IRune rune in runes)
+        {
+            if(bttn[minButtonNum].name == rune.ButtonName())
+            {
+                rune.isRuneActive(true);
+            }
+            else
+            {
+                rune.isRuneActive(false);
+            }
         }
     }
 }

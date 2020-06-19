@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 45271326}
   - component: {fileID: 45271325}
   - component: {fileID: 45271324}
-  - component: {fileID: 45271327}
   m_Layer: 5
   m_Name: Rune UI Panel
   m_TagString: Untagged
@@ -229,49 +228,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45271322}
   m_CullTransparentMesh: 0
---- !u!114 &45271327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 45271322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 13
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1559402632}
-          m_MethodName: StartDrag
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 14
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1559402632}
-          m_MethodName: EndDrag
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &127422518
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,7 +530,7 @@ GameObject:
   - component: {fileID: 400277024}
   - component: {fileID: 400277023}
   m_Layer: 5
-  m_Name: Cube Remote Bomb Button
+  m_Name: Cube Remote Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1809,7 +1765,7 @@ GameObject:
   - component: {fileID: 1187242984}
   - component: {fileID: 1187242983}
   m_Layer: 5
-  m_Name: Sphere Remote Bomb Button
+  m_Name: Sphere Remote Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2084,6 +2040,10 @@ PrefabInstance:
       propertyPath: m_TiltMin
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 3}
+      propertyPath: m_AutoTargetPlayer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 3}
 --- !u!1 &1559402631
@@ -2225,6 +2185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d4dfd8a7c1432f4d83ad3d7e3ce2571, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Cryonis
 --- !u!114 &1846335283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2237,6 +2198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3dd98e1e914034480ab5919574d78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Stasis
 --- !u!114 &1846335284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2249,6 +2211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf0a10a44e4b674596738dc5bbc50d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Magnesis
 --- !u!114 &1846335285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2261,6 +2224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf344df3d017ca4b821cfd69a61e3cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Cube Remote Bomb
 --- !u!114 &1846335286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2273,6 +2237,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59ae9c06b2bdef24ebe6fb0517cc3253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Sphere Remote Bomb
+  bomb: {fileID: 421696064738453343, guid: ccd66472e803c8447a4caac3f5848d6d, type: 3}
+  throwForwardForce: 300
+  throwUpForce: 300
+  setDownSpeed: 5
 --- !u!1 &1923767272
 GameObject:
   m_ObjectHideFlags: 0
