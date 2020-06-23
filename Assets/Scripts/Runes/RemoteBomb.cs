@@ -15,7 +15,7 @@ public class RemoteBomb : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInParent<Rigidbody>();
         coll = GetComponent<SphereCollider>();
     }
 
@@ -27,9 +27,15 @@ public class RemoteBomb : MonoBehaviour
 
     public void Detonate()
     {
+        GetComponentInParent<MeshRenderer>().enabled = false;
+        GetComponent<MeshRenderer>().enabled = true;
+        foreach (Collider c in GetComponentsInParent<Collider>())
+        {
+            c.enabled = false;
+        }
+        coll.enabled = true;
         isExploding = true;
         rb.isKinematic = true;
-        coll.isTrigger = true;
         StartCoroutine(Explosion());
     }
 
@@ -50,7 +56,7 @@ public class RemoteBomb : MonoBehaviour
     private IEnumerator DestroyDelay()
     {
         yield return new WaitForSeconds(1.0f);
-        Destroy(this.gameObject);
+        Destroy(this.gameObject.transform.parent.gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

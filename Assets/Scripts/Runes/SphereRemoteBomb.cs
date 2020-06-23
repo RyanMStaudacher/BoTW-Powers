@@ -129,7 +129,7 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
 
     private void DetonateBomb()
     {
-        bombInstance.GetComponent<RemoteBomb>().Detonate();
+        bombInstance.GetComponentInChildren<RemoteBomb>().Detonate();
     }
 
     private IEnumerator SetDownPickUpDelay()

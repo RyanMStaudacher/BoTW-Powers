@@ -2873,6 +2873,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Cube Remote Bomb
+  bomb: {fileID: 950361397096746718, guid: 037ebd4e92b5daf4e96f3300377cb165, type: 3}
+  throwForwardForce: 300
+  throwUpForce: 300
+  setDownSpeed: 5
 --- !u!114 &1846335286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2886,7 +2890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Sphere Remote Bomb
-  bomb: {fileID: 421696064738453343, guid: ccd66472e803c8447a4caac3f5848d6d, type: 3}
+  bomb: {fileID: 7053142056828981993, guid: ccd66472e803c8447a4caac3f5848d6d, type: 3}
   throwForwardForce: 300
   throwUpForce: 300
   setDownSpeed: 5
