@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -2949769600814351220}
   m_Layer: 0
   m_Name: Sphere Bomb
-  m_TagString: Player
+  m_TagString: Pickupable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,6 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea1f43391b2090c419407c12d2cbb351, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionSize: {x: 5, y: 5, z: 5}
+  explosionSpeed: 100
+  explosionForce: 1000
 --- !u!54 &-2949769600814351220
 Rigidbody:
   m_ObjectHideFlags: 0

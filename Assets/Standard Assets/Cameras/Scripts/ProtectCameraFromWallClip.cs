@@ -13,6 +13,7 @@ namespace UnityStandardAssets.Cameras
         public float closestDistance = 0.5f;            // the closest distance the camera can be from the target
         public bool protecting { get; private set; }    // used for determining if there is an object between the target and the camera
         public string dontClipTag = "Player";           // don't clip against objects with this tag (useful for not clipping against the targeted object)
+        public string dontClipTag2 = "Pickupable";
 
         private Transform m_Cam;                  // the transform of the camera
         private Transform m_Pivot;                // the point at which the camera pivots around
@@ -55,7 +56,7 @@ namespace UnityStandardAssets.Cameras
             for (int i = 0; i < cols.Length; i++)
             {
                 if ((!cols[i].isTrigger) &&
-                    !(cols[i].attachedRigidbody != null && cols[i].attachedRigidbody.CompareTag(dontClipTag)))
+                    !(cols[i].attachedRigidbody != null && cols[i].attachedRigidbody.CompareTag(dontClipTag2)))
                 {
                     initialIntersect = true;
                     break;
@@ -88,7 +89,7 @@ namespace UnityStandardAssets.Cameras
                 // only deal with the collision if it was closer than the previous one, not a trigger, and not attached to a rigidbody tagged with the dontClipTag
                 if (m_Hits[i].distance < nearest && (!m_Hits[i].collider.isTrigger) &&
                     !(m_Hits[i].collider.attachedRigidbody != null &&
-                      m_Hits[i].collider.attachedRigidbody.CompareTag(dontClipTag)))
+                      m_Hits[i].collider.attachedRigidbody.CompareTag(dontClipTag2)))
                 {
                     // change the nearest collision to latest
                     nearest = m_Hits[i].distance;

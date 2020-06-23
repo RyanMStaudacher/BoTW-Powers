@@ -15,6 +15,7 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
     private bool shouldHold = false;
     private bool hasReleasedBomb = false;
     private Vector3 setDownTargetPosition;
+    private BombPickup pickUp;
 
     // Name that allows button to activate the correct script
     // This is bad
@@ -33,7 +34,7 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
     // Start is called before the first frame update
     void Start()
     {
-        
+        pickUp = GetComponentInChildren<BombPickup>();
     }
 
     // Update is called once per frame
@@ -63,6 +64,14 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
         else if(Input.GetButtonDown("Use Rune 2") && bombInstance != null && !hasReleasedBomb)
         {
             SetBombDown();
+        }
+        else if(Input.GetButtonDown("Use Rune 2") && bombInstance != null && hasReleasedBomb && pickUp.canPickUp)
+        {
+            PickBombUp();
+        }
+        else if(Input.GetButtonDown("Use Rune") && bombInstance != null && hasReleasedBomb)
+        {
+            DetonateBomb();
         }
         else if (bombInstance != null && shouldHold)
         {
@@ -108,20 +117,32 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
     {
         shouldHold = false;
         bombInstance.transform.parent = null;
-        StartCoroutine(SetBombDownDelay());
+        StartCoroutine(SetDownPickUpDelay());
+    }
+
+    private void PickBombUp()
+    {
+        bombInstance.GetComponent<SphereCollider>().enabled = false;
+        bombInstance.GetComponent<Rigidbody>().isKinematic = true;
+        StartCoroutine(SetDownPickUpDelay());
     }
 
     private void DetonateBomb()
     {
-        if(Input.GetButtonDown("Use Rune") && bombInstance != null)
-        {
-             
-        }
+        bombInstance.GetComponent<RemoteBomb>().Detonate();
     }
 
-    private IEnumerator SetBombDownDelay()
+    private IEnumerator SetDownPickUpDelay()
     {
-        setDownTargetPosition = transform.position + transform.TransformDirection(new Vector3(0, 0.2f, 0.5f));
+        if(!hasReleasedBomb)
+        {
+            setDownTargetPosition = transform.position + transform.TransformDirection(new Vector3(0, 0.2f, 0.5f));
+        }
+        else if(hasReleasedBomb)
+        {
+            setDownTargetPosition = transform.position + transform.TransformDirection(new Vector3(0f, 1.8f, 0f));
+        }
+
         while (bombInstance.transform.position != setDownTargetPosition)
         {
             bombInstance.transform.position = Vector3.MoveTowards(bombInstance.transform.position, setDownTargetPosition, setDownSpeed * Time.deltaTime);
@@ -130,11 +151,17 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
 
         if(bombInstance.transform.position == setDownTargetPosition)
         {
-            bombInstance.GetComponent<SphereCollider>().enabled = true;
-            bombInstance.GetComponent<Rigidbody>().isKinematic = false;
             if(!hasReleasedBomb)
             {
+                bombInstance.GetComponent<SphereCollider>().enabled = true;
+                bombInstance.GetComponent<Rigidbody>().isKinematic = false;
                 hasReleasedBomb = true;
+            }
+            else if(hasReleasedBomb)
+            {
+                hasReleasedBomb = false;
+                shouldHold = true;
+                bombInstance.transform.parent = this.transform;
             }
         }
     }
