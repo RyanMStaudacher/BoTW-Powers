@@ -12,7 +12,11 @@ public class BombPickup : MonoBehaviour
         {
             canPickUp = true;
         }
-        else
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.transform != null && other.gameObject.CompareTag("Pickupable"))
         {
             canPickUp = false;
         }

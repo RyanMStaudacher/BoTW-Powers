@@ -61,7 +61,7 @@ public class RemoteBomb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player") || other.CompareTag("Pickupable") && isExploding)
+        if(other.CompareTag("Player") || other.CompareTag("Pickupable") || other.CompareTag("Magnetic") && isExploding)
         {
             other.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 2.5f);
         }

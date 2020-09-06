@@ -57,7 +57,7 @@ public class SphereRemoteBomb : MonoBehaviour, IRune
         {
             PutBombAway();
         }
-        else if (Input.GetButtonDown("Throw Bomb") && bombInstance != null && !hasReleasedBomb)
+        else if (Input.GetButtonDown("Use Rune 3") && bombInstance != null && !hasReleasedBomb)
         {
             ThrowBomb();
         }
